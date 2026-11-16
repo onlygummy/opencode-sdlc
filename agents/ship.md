@@ -8,6 +8,9 @@ permissions:
   - { action: "subagent", resource: "*", effect: "deny" }
   # Branch keeper (clean tree) or direct (dirty tree). See docs/adr/0019.
   - { action: "subagent", resource: "branchwright", effect: "allow" }
+  # Test gate only. Review stays a separate primary agent for independent
+  # verification; ship never reviews its own diff.
+  - { action: "subagent", resource: "verify", effect: "allow" }
   # Shell is opt-in per command. Broad deny first, allows next, write guards last.
   - { action: "shell", resource: "*", effect: "deny" }
 
@@ -240,6 +243,10 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 8. Commit only the fallback path. When `git log --oneline origin/<trunk>..HEAD`
    already lists the change, push it as it is. Never add a second commit on top
    of the existing one.
+9. Review is a separate primary agent and runs before ship. Ship assumes the
+   review already passed; if it has not, stop and tell the user to switch to
+   review first. Ship may dispatch `verify` as a test gate before push, but
+   never performs the review itself.
 
 ## Delivery runs unattended
 
