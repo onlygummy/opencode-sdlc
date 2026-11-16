@@ -15,10 +15,7 @@ Write documentation a reader can act on. Structure first, prose second.
 
 ## Local-only artifacts
 
-`GLOSSARY.md`, `GLOSSARY-MAP.md`, and `docs/adr/` are development artifacts.
-Keep them on disk and out of git. Check `.gitignore` before writing one; report
-missing entries to the caller. Never stage them, and never treat a tracked copy
-as the target.
+`GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/` are dev artifacts: keep on disk, out of git. Check `.gitignore`; report missing entries. Never stage; never treat tracked copy as target.
 
 ## Pick the type first
 
