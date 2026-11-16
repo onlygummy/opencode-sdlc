@@ -1,13 +1,9 @@
-// Cloudflare Worker: OpenCode Go and Zen proxy with a shared access key.
-const UPSTREAMS = {
-  go: 'https://opencode.ai/inference/go',
-  zen: 'https://opencode.ai/inference',
-}
+// Cloudflare Worker: OpenCode Go proxy with a shared access key.
+const UPSTREAM = 'https://opencode.ai/inference/go'
 const BROWSER_UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
 
-// Only these upstream path prefixes are reachable through the proxy.
-const ALLOWED_PATH = /^\/(?:zen\/)?(?:v1|openai\/v1|anthropic\/v1|google\/v1beta)\//
+const ALLOWED_PATH = /^\/(?:v1|openai\/v1|anthropic\/v1|google\/v1beta)\//
 
 const MAX_BODY_BYTES = 32 * 1024 * 1024
 const UPSTREAM_TIMEOUT_MS = 5 * 60 * 1000
@@ -19,7 +15,6 @@ function json(status, payload) {
   })
 }
 
-// Constant-time comparison for equal-length strings.
 function safeEqual(a, b) {
   if (a.length !== b.length) return false
   let diff = 0
@@ -30,13 +25,26 @@ function safeEqual(a, b) {
 }
 
 function isAuthorized(request, env) {
-  const provided = request.headers.get('x-proxy-key') ?? ''
   const expected = env.PROXY_KEY ?? ''
   if (!expected) return false
-  return safeEqual(provided, expected)
+
+  // ตรวจสอบ PROXY_KEY จาก Client
+  const providedKey = request.headers.get('x-proxy-key')
+  if (providedKey && safeEqual(providedKey, expected)) {
+    return true
+  }
+
+  const authHeader = request.headers.get('authorization') ?? ''
+  if (authHeader.startsWith('Bearer ')) {
+    const token = authHeader.slice(7).trim()
+    if (safeEqual(token, expected)) {
+      return true
+    }
+  }
+
+  return false
 }
 
-// Reject separators that survive URL parsing, including double encoding.
 function hasEncodedSeparator(pathname) {
   let value = pathname
   for (let depth = 0; depth < 4; depth += 1) {
@@ -48,13 +56,14 @@ function hasEncodedSeparator(pathname) {
   return true
 }
 
-function forwardHeaders(request) {
+function forwardHeaders(request, env) {
   const headers = new Headers(request.headers)
 
-  // Never forward the proxy key or client-identity headers upstream.
+  // ลบ header ฝั่ง client และ proxy key ออก
   for (const name of [
     'host',
     'x-proxy-key',
+    'authorization',
     'x-opencode-client',
     'x-client-version',
     'cookie',
@@ -86,6 +95,12 @@ function forwardHeaders(request) {
   }
 
   headers.set('user-agent', BROWSER_UA)
+
+  // แนบ API Key จริงของ OpenCode Go ก่อนส่งไปยัง Upstream
+  if (env.OPENCODE_API_KEY) {
+    headers.set('authorization', `Bearer ${env.OPENCODE_API_KEY}`)
+  }
+
   return headers
 }
 
@@ -99,6 +114,10 @@ export default {
 
     if (!isAuthorized(request, env)) {
       return json(401, { error: 'Unauthorized' })
+    }
+
+    if (!env.OPENCODE_API_KEY) {
+      return json(500, { error: 'Missing OPENCODE_API_KEY in worker env' })
     }
 
     if (hasEncodedSeparator(url.pathname)) {
@@ -119,19 +138,15 @@ export default {
       return json(413, { error: 'Payload too large' })
     }
 
-    const isZen = url.pathname === '/zen' || url.pathname.startsWith('/zen/')
-    const upstreamPath = isZen ? url.pathname.slice('/zen'.length) : url.pathname
-    const upstreamBase = isZen ? UPSTREAMS.zen : UPSTREAMS.go
-    const destination = new URL(upstreamBase + upstreamPath + url.search)
-    const expectedPrefix = isZen ? '/inference/' : '/inference/go/'
-    if (!destination.pathname.startsWith(expectedPrefix)) {
+    const destination = new URL(UPSTREAM + url.pathname + url.search)
+    if (!destination.pathname.startsWith('/inference/go/')) {
       return json(404, { error: 'Not found' })
     }
 
     try {
       const upstream = await fetch(destination.toString(), {
         method: request.method,
-        headers: forwardHeaders(request),
+        headers: forwardHeaders(request, env), // ส่ง env เข้าไปแนบ key
         body: request.method === 'GET' ? undefined : request.body,
         redirect: 'manual',
         signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
