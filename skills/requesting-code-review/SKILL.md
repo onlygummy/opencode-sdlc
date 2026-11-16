@@ -12,27 +12,15 @@ metadata:
 
 # Pre-Commit Code Verification
 
-Automated verification pipeline before code lands. Static scans, baseline-aware
-quality gates, independent review, and an auto-fix loop.
+Automated verification pipeline before code lands: static scans, baseline-aware quality gates, independent review, auto-fix loop.
 
-**Core principle:** The Review agent is already an independent fresh context —
-no shared history with the implementer. Review inline, not via sub-agent.
+**Core principle:** Review agent is already an independent fresh context (no shared history with implementer). Review inline, not via sub-agent.
 
-> **Local divergence from upstream v2.1.0.** Three changes were made here for a
-> Windows + PowerShell host. Re-apply them when pulling a newer upstream version:
->
-> 1. **Step 2 and Step 3 gained PowerShell variants** alongside the bash blocks.
->    `tail` and `which` are not reliable on PowerShell; `Select-Object -Last`
->    and `Get-Command` replace them.
-> 2. **Step 3 baseline uses `git worktree` instead of `git stash`.** A stash
->    risks stranding the user's working tree if the pop fails, and the Review
->    agent has no `edit` permission to recover it.
-> 3. **Step 7 auto-fix is not usable here.** The Review agent has no `edit`
->    permission, so the agent prompt skips it and hands fixes back to the user.
->    The Step 7 text below is kept for upstream parity but is not executed.
->
-> The Step 8 `git add` / `git commit` commands are also denied for the Review
-> agent. It generates the commit message; the user runs the commit.
+> **Local divergence from upstream v2.1.0** (Windows + PowerShell host). Re-apply on upstream pull:
+> 1. Steps 2/3 gained PowerShell variants (`tail`/`which` → `Select-Object -Last`/`Get-Command`).
+> 2. Step 3 baseline uses `git worktree` (not stash) to avoid stranding user's tree; reviewer has no edit permission.
+> 3. Step 7 auto-fix not usable (no edit permission); prompt skips it, hands fixes to user. Step 7 text kept for parity.
+> Step 8 `git add`/`git commit` also denied for Review agent; it generates message, user commits.
 
 ## When to Use
 
@@ -61,11 +49,7 @@ git diff HEAD -- specific_file.py
 
 ## Step 2 — Static security scan
 
-Scan added lines only. Any match is a security concern fed into Step 5.
-
-Git does the line filtering in both variants, so the shell only has to match
-patterns. Do not pipe raw diff text into `Select-String` expecting line
-prefixes to survive: PowerShell streams git's output as objects.
+Scan added lines only; matches feed Step 5. Git filters lines in both variants, so shell only matches patterns. Don't pipe raw diff into `Select-String` expecting prefixes to survive (PowerShell streams git output as objects).
 
 Bash:
 ```bash
@@ -105,15 +89,11 @@ git diff --cached | Select-String -Pattern '^\+' | Select-String -Pattern 'execu
 
 ## Step 3 — Baseline tests and linting
 
-Detect the project language and run the appropriate tools. Capture the failure
-count BEFORE your changes as **baseline_failures**, then compare against it.
-Only NEW failures introduced by your changes block the commit.
+Detect project language; run tools. Capture failure count before changes as **baseline_failures**; compare. Only NEW failures block.
 
-### Get a baseline with a worktree, not a stash
+### Baseline via worktree (not stash)
 
-Check out `HEAD` in a scratch directory so the user's working tree is never
-touched. A stash can strand their changes if the pop fails, and a read-only
-reviewer has no way to recover them.
+Check out `HEAD` in a scratch dir so user's tree is untouched. Stash can strand changes; reviewer has no edit permission to recover.
 
 ```powershell
 # PowerShell. Keep the scratch path outside the repo checkout.
@@ -135,11 +115,7 @@ git worktree remove --force "$wt"
 git worktree prune
 ```
 
-Always remove the worktree when the run finishes, even if tests fail or the
-diff is empty. `git worktree list` must not grow across reviews.
-
-If `git worktree add` fails, for example mid-rebase, skip the baseline
-comparison and say so in the report. Do not fall back to `git stash`.
+Always remove worktree when run ends (tests fail or empty diff). `git worktree list` must not grow. If `git worktree add` fails (e.g. mid-rebase), skip baseline comparison and say so; don't fall back to stash.
 
 **Test frameworks** (auto-detect by project files). In PowerShell, pipe to
 `Select-Object -Last 5` instead of `tail -5`; `tail` may not exist:

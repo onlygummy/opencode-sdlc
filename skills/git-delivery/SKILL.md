@@ -5,11 +5,7 @@ description: "Ordered workflow for turning a working tree into a merged pull req
 
 # Git delivery
 
-Work the steps in order. Stop at the first step whose condition says stop. Never
-skip step 0, never push before step 8, and never merge before step 10 passes.
-
-Use `gh` when it is shorter than the git equivalent. The one rule that matters:
-`gh` talks to the same remote, so every guard on `git push` still applies.
+Work steps in order. Stop at first step whose condition says stop. Never skip step 0, never push before step 8, never merge before step 10 passes. Use `gh` when shorter; it talks to the same remote, so all `git push` guards apply.
 
 ## Step 0 - Identify the repo
 
