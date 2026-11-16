@@ -4,15 +4,12 @@
   // and the body is the system prompt.
   // See https://opencode.ai/docs/agents for details.
   "providers": {
-    "proxy": {
-      "name": "Proxy",
-      "package": "@opencode/ai/providers/openai-compatible",
-      "env": ["PROXY_OPENCODE_API_KEY"],
+    "opencode-go": {
+      "name": "Opencode Go Proxy",
+      "npm": "@ai-sdk/openai-compatible",
       "settings": {
         "baseURL": "{env:PROXY_BASE_URL}",
-      },
-      "headers": {
-        "x-proxy-key": "{env:PROXY_KEY}",
+        "apiKey": "{env:PROXY_KEY}",
       },
     },
   },
