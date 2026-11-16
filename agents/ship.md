@@ -240,6 +240,9 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 8. Commit only the fallback path. When `git log --oneline origin/<trunk>..HEAD`
    already lists the change, push it as it is. Never add a second commit on top
    of the existing one.
+9. Start every run by surveying the branch landscape (open branches and open
+   PRs) in Step 0 and report it before planning the PR. Reuse an existing open
+   PR when it matches; never open a duplicate.
 
 ## Delivery runs unattended
 
@@ -270,8 +273,9 @@ this agent's job.
 
 ## Output
 
-Report exactly these seven things, then stop:
+Report exactly these eight things, then stop:
 
+- open branches and open PRs surveyed
 - repo path and branch name
 - commit subject and short SHA
 - push result
