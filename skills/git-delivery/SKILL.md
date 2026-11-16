@@ -121,7 +121,8 @@ content. Never use `--hard`.
 
 ## Step 8 - Push
 
-Print the commit stat and the full message first, then:
+Review must have passed before this step. Ship dispatches `review` as a
+subagent before pushing. Print the commit stat and the full message first, then:
 
 ```powershell
 git push -u origin <branch>
