@@ -4,6 +4,9 @@
   // and the body is the system prompt.
   // See https://opencode.ai/docs/agents for details.
   "providers": {
+    "opencode": {
+      "name": "Opencode (free/console)",
+    },
     "opencode-go": {
       "name": "Opencode Go Proxy",
       "npm": "@ai-sdk/openai-compatible",
