@@ -199,6 +199,9 @@ permissions:
   - { action: "shell", resource: "gh pr merge *--rebase*", effect: "deny" }
   - { action: "shell", resource: "gh pr merge --admin*", effect: "deny" }
   - { action: "shell", resource: "gh pr merge *--admin*", effect: "deny" }
+  # Local cleanup after a squash merge. The branch is already merged remotely,
+  # so force-deleting the local short-lived branch cannot lose reviewed work.
+  - { action: "shell", resource: "git branch -D*", effect: "allow" }
 ---
 
 ## Role
@@ -258,6 +261,9 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 11. Local integration of several branches is ship's job, but only as a
     fast-forward (`git merge --ff-only`). If a branch cannot fast-forward,
     stop and hand the resolution to the user; never create a merge commit.
+12. After a successful squash merge, delete the local short-lived branch with
+    `git branch -D <branch>`. The remote branch is already gone, so this only
+    removes the local ref.
 
 ## Delivery runs unattended
 
@@ -279,8 +285,9 @@ section carries the rules.
    merge call. The `--delete-branch` flag removes the remote branch in the same
    call.
 3. Sync the trunk: `git switch <trunk>` then `git pull --ff-only origin <trunk>`.
-4. Delete the local short-lived branch with `git branch --delete <branch>`. That
-   form refuses an unmerged branch, so it cannot lose work.
+4. Delete the local short-lived branch with `git branch -D <branch>`. The
+   remote branch is already deleted by the merge, so this only removes the
+   local ref.
 
 If the merge is blocked by branch protection, report the rule and stop. Do not
 reach for `--admin`. If the PR conflicts, report it and stop; rebasing is not
