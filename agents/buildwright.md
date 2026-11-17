@@ -9,6 +9,8 @@ permissions:
   - { action: "edit", resource: "*GLOSSARY-MAP.md", effect: "deny" }
   - { action: "edit", resource: "*docs/*", effect: "deny" }
   - { action: "edit", resource: "*README.md", effect: "deny" }
+  # Skills are editable even when their path contains "docs" (e.g. grill-with-docs).
+  - { action: "edit", resource: "*skills/*", effect: "allow" }
   # Subagent dispatch allowlist.
   - { action: "subagent", resource: "scribewright", effect: "allow" }
   - { action: "subagent", resource: "branchwright", effect: "allow" }
