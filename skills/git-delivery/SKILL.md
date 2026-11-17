@@ -7,12 +7,17 @@ description: "Ordered workflow for turning a working tree into a merged pull req
 
 Work steps in order. Stop at first step whose condition says stop. Never skip step 0, never push before step 8, never merge before step 10 passes. Use `gh` when shorter; it talks to the same remote, so all `git push` guards apply.
 
-## Step 0 - Identify the repo
+## Step 0 - Identify the repo and survey open branches
 
 ```powershell
 git rev-parse --show-toplevel
 git status --short
 gh repo view --json defaultBranchRef,nameWithOwner
+git fetch origin
+git branch --show-current
+git branch -a
+git branch --merged <trunk>
+gh pr list --state open --limit 50
 ```
 
 - Name the repo path in your first line of output. A session opened in the wrong
@@ -21,6 +26,17 @@ gh repo view --json defaultBranchRef,nameWithOwner
   back to `git rev-parse --abbrev-ref origin/HEAD` and drop the `origin/` prefix.
   Never assume `main`.
 - No remote means there is nothing to push to. Stop.
+- Branch landscape: after the fetch, report the current branch, every local
+  branch, every remote-tracking branch, and every open PR (number, title, head
+  branch, draft flag). This is a report only; do not delete anything here.
+- Remnants: `git branch --merged <trunk>` lists local branches already merged
+  into the trunk. Report them as remnants the user may prune; do not delete them.
+- Reuse: if the current branch already has an open PR, reuse that PR and do not
+  open a second one. If an open PR's head branch name matches the planned
+  `type/slug` exactly, reuse that branch and PR instead of creating new ones.
+  Otherwise proceed and keep the landscape in the report.
+- If `gh pr list` fails (auth, network), fall back to the git branch lists and
+  note the failure; do not stop the run.
 
 ## Step 1 - Decide the type
 
