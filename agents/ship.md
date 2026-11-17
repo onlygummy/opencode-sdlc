@@ -32,6 +32,10 @@ permissions:
   # Write path
   - { action: "shell", resource: "git fetch*", effect: "allow" }
   - { action: "shell", resource: "git pull --ff-only*", effect: "allow" }
+  # Local integration. Fast-forward only, so the trunk stays linear and no
+  # merge commit is created. Non-fast-forward integration is left to the user.
+  - { action: "shell", resource: "git merge --ff-only*", effect: "allow" }
+  - { action: "shell", resource: "git merge --abort*", effect: "allow" }
   - { action: "shell", resource: "git switch*", effect: "allow" }
   - { action: "shell", resource: "git checkout -b*", effect: "allow" }
   - { action: "shell", resource: "git add*", effect: "allow" }
@@ -240,6 +244,9 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 8. Commit only the fallback path. When `git log --oneline origin/<trunk>..HEAD`
    already lists the change, push it as it is. Never add a second commit on top
    of the existing one.
+9. Local integration of several branches is ship's job, but only as a
+   fast-forward (`git merge --ff-only`). If a branch cannot fast-forward,
+   stop and hand the resolution to the user; never create a merge commit.
 
 ## Delivery runs unattended
 
