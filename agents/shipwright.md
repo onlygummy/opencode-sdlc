@@ -108,9 +108,10 @@ permissions:
   - { action: "shell", resource: "git clean*", effect: "deny" }
   - { action: "shell", resource: "git rebase*", effect: "deny" }
   # Windows matches patterns without case, so `-d` and `-D` cannot be separated.
-  # Local deletion therefore stays denied; the merged remote branch is the one
-  # the procedure deletes. A write form also has a long spelling that does not
-  # match its short flag, so each one needs its own rule.
+  # Force deletion is re-allowed at the end of this list for cleanup after a
+  # squash merge, because the remote branch is already gone. A write form also
+  # has a long spelling that does not match its short flag, so each one needs its
+  # own rule.
   - { action: "shell", resource: "git branch -d*", effect: "deny" }
   - { action: "shell", resource: "git branch -D*", effect: "deny" }
   # The long `--delete` form is allowed above because it refuses an unmerged

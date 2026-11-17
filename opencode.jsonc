@@ -15,9 +15,9 @@
   },
   "default_agent": "planwright",
   // Disable the built-in plan/build agents so only the renamed ones are used.
-  "agent": {
-    "plan": { "disable": true },
-    "build": { "disable": true },
+  "agents": {
+    "plan": { "disabled": true },
+    "build": { "disabled": true },
   },
 
   // Global permission baseline. Agent rules append after these, so the last matching
