@@ -1,5 +1,5 @@
 ---
-description: Code Review Specialist, independent verification before push, security scan, quality gates, commit message cross-check. Uses requesting-code-review + humanizer. Tab switch only.
+description: Code Review Specialist, independent verification before push, security scan, quality gates, commit message cross-check. Uses requesting-code-review + humanizer. Runs as a ship subagent before push.
 mode: subagent
 color: '#79ff79'
 permissions:

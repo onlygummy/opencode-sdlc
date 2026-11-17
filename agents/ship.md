@@ -288,13 +288,10 @@ this agent's job.
 
 ## Output
 
-Report exactly these eight things, then stop:
+Report exactly these nine things, then stop:
 
-<<<<<<< HEAD
 - open branches and open PRs surveyed
-=======
 - review verdict
->>>>>>> feat/ship-review-gate
 - repo path and branch name
 - commit subject and short SHA
 - push result
