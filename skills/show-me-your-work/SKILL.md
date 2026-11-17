@@ -1,6 +1,6 @@
 ---
 name: show-me-your-work
-description: "Prove a change with evidence instead of a claim: show the diff, the command output, the test result, and what was left undone. Use before saying a task is done, when handing off to review, or when the user asks whether something works."
+description: "Prove a change with evidence instead of a claim: show the diff, the command output, the test result, and what was left undone. Use when the user asks whether something works, before saying a task is done, or when handing off to review."
 ---
 
 # Show me your work
