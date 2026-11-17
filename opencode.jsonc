@@ -14,6 +14,11 @@
     },
   },
   "default_agent": "planwright",
+  // Disable the built-in plan/build agents so only the renamed ones are used.
+  "agent": {
+    "plan": { "disable": true },
+    "build": { "disable": true },
+  },
 
   // Global permission baseline. Agent rules append after these, so the last matching
   // rule across both lists wins. V2 rule shape: {action, resource, effect}.
