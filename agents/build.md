@@ -36,6 +36,11 @@ permissions:
   # prompt carries the state machine: read the trunk, refuse a dirty tree,
   # refuse an existing name. See docs/adr/0019.
   - { action: "shell", resource: "git switch*", effect: "allow" }
+  - { action: "shell", resource: "git checkout -- *", effect: "allow" }
+  # Conflict resolution. Build may merge a base branch into the short-lived
+  # branch and abort a failed merge. Force merge and hard reset stay denied.
+  - { action: "shell", resource: "git merge*", effect: "allow" }
+  - { action: "shell", resource: "git merge --abort*", effect: "allow" }
   # Read-only git. Layer 1: commands with no write mode at all. Must stay under
   # the `git *` deny above, so appending at the end of this block is required.
   - { action: "shell", resource: "git blame*", effect: "allow" }
