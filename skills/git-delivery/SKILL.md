@@ -119,6 +119,13 @@ git commit -m "type(scope): subject" -m "why this change is needed"
 `git reset --soft` keeps the tree and the index, so the new commit holds the same
 content. Never use `--hard`.
 
+## Step 7.5 - Integrate branches (optional)
+
+Only when several short-lived branches must land together. Fast-forward each
+into the trunk with `git merge --ff-only <branch>`; if one cannot
+fast-forward, stop and hand the resolution to the user. Never create a merge
+commit.
+
 ## Step 8 - Push
 
 Print the commit stat and the full message first, then:
