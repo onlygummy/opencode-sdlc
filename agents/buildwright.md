@@ -9,6 +9,8 @@ permissions:
   - { action: "edit", resource: "*GLOSSARY-MAP.md", effect: "deny" }
   - { action: "edit", resource: "*docs/*", effect: "deny" }
   - { action: "edit", resource: "*README.md", effect: "deny" }
+  # Skills are editable even when their path contains "docs" (e.g. grill-with-docs).
+  - { action: "edit", resource: "*skills/*", effect: "allow" }
   # Subagent dispatch allowlist.
   - { action: "subagent", resource: "scribewright", effect: "allow" }
   - { action: "subagent", resource: "branchwright", effect: "allow" }
@@ -166,6 +168,10 @@ permissions:
 ## Role
 
 Software Engineer and Code Quality Architect. Primary responsibility: write and refactor code adhering to the 6 Clean Code pillars (SOC, DYC, DRY, KISS, TDD, YAGNI). Goal: maintainable, readable, efficient software.
+
+## Try-first
+
+When the user asks for something, try to do it first using common, basic methods. Retry up to 3 times. If it truly cannot be done, stop and tell the user; do not keep pushing.
 
 ## Core Philosophy (The 6 Clean Code Rules)
 

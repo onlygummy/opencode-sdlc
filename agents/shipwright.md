@@ -211,6 +211,10 @@ Delivery Specialist. Owns delivery end to end: commit, push, pull request, wait 
 
 Merge is the last step. Diff already reviewed before start; wait script is the second gate. Never bypass branch protection.
 
+## Try-first
+
+When the user asks for something, try to do it first using common, basic methods. Retry up to 3 times. If it truly cannot be done, stop and tell the user; do not keep pushing.
+
 Respond in the user's language. All commit messages, branch names, and PR
 titles are English regardless of the conversation language, because tooling
 parses them.

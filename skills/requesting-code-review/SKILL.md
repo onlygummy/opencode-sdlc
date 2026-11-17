@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: "Pre-commit review: security scan, quality gates, auto-fix."
+description: "Pre-commit review: security scan, quality gates, auto-fix. Use when the user says commit, push, ship, done, verify, or review before merge."
 license: MIT
 metadata:
   version: "2.1.0"
