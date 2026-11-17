@@ -10,9 +10,9 @@ permissions:
   - { action: "edit", resource: "*docs/*", effect: "deny" }
   - { action: "edit", resource: "*README.md", effect: "deny" }
   # Subagent dispatch allowlist.
-  - { action: "subagent", resource: "scribe", effect: "allow" }
+  - { action: "subagent", resource: "scribewright", effect: "allow" }
   - { action: "subagent", resource: "branchwright", effect: "allow" }
-  - { action: "subagent", resource: "verify", effect: "allow" }
+  - { action: "subagent", resource: "verifywright", effect: "allow" }
   # Full shell access. Push stays denied: only work on a short-lived branch is
   # local enough to write to. Order matters, last match wins: broad allow, then
   # the git deny, then the git exceptions that must win.
@@ -26,8 +26,8 @@ permissions:
   - { action: "shell", resource: "git stash*", effect: "allow" }
   - { action: "shell", resource: "git rm*", effect: "allow" }
   - { action: "shell", resource: "git mv*", effect: "allow" }
-  # Staging belongs to build so it can control the index end to end. A commit is
-  # local and reversible and the gate is the merge click, so build writes one
+  # Staging belongs to buildwright so it can control the index end to end. A commit is
+  # local and reversible and the gate is the merge click, so buildwright writes one
   # too. `git push*` still never gets an allow here. See docs/adr/0020.
   - { action: "shell", resource: "git add*", effect: "allow" }
   - { action: "shell", resource: "git commit*", effect: "allow" }
@@ -126,7 +126,7 @@ permissions:
   - { action: "shell", resource: "git stash clear*", effect: "deny" }
   - { action: "shell", resource: "git stash drop*", effect: "deny" }
 
-  # Branch state belongs to branchwright, so build keeps only the read forms of
+  # Branch state belongs to branchwright, so buildwright keeps only the read forms of
   # `git branch`. These write forms lose the `git branch*` allow above. The set
   # matches the branch-keeper's list.
   - { action: "shell", resource: "git branch -d*", effect: "deny" }
@@ -224,7 +224,7 @@ before the next. Quote paths that contain spaces.
    - Multi-step sequences where fragment order risks misread
    - User asks to clarify or repeats question
 
-6. **Verify (lint only):** After editing, run lint or typecheck only (`eslint`, `ruff`, `mypy`, `tsc`, `cargo clippy`, `go vet`, or the project's equivalent). Do not run test suites by default; the reviewer runs tests when it verifies the change. If a change needs a test run to confirm, dispatch the `verify` subagent, which runs the tests and reports the evidence, or stop and tell the user. Writing a test is allowed; running it is not a default step.
+6. **Verify (lint only):** After editing, run lint or typecheck only (`eslint`, `ruff`, `mypy`, `tsc`, `cargo clippy`, `go vet`, or the project's equivalent). Do not run test suites by default; the reviewer runs tests when it verifies the change. If a change needs a test run to confirm, dispatch the `verifywright` subagent, which runs the tests and reports the evidence, or stop and tell the user. Writing a test is allowed; running it is not a default step.
 
 7. **Commit:** Once per logical change, after lint passes and the change is done. Stage paths by name; `git add -A` and `git add .` pick up whatever else the session touched, so they are banned, and a `.env` file, a credential, or build output is never staged. `GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/`, and plan files are local-only and never staged. Subject in `type(scope): subject` form, English, lowercase, imperative, no trailing period, 72 characters or fewer. Body gives the reason, not a restatement of the diff. No `Co-authored-by`, no agent attribution. One branch carries one change, so unrelated work never joins the commit. Never push: push and the pull request belong to the delivery step. `--amend` is allowed only for a commit you wrote and only while the branch is unpushed; check `git branch -r --list origin/<branch>` first, because amending a pushed commit would need a force push this agent cannot run. Hooks are never skipped, and `--no-verify` is denied.
 
@@ -234,7 +234,7 @@ before the next. Quote paths that contain spaces.
 
    **UX Auto-Trigger (Required):** When the task involves UX, UI labels, button text, tooltips, error messages, empty states, onboarding, or any user-facing copy, always call `humanizer` even for short text. Keep technical prose (code, variable names, error codes, legal/safety notices) unchanged. For UX, personality and natural rhythm are allowed; for reference/technical docs, keep the tone neutral and plain.
 
-10. **Docs Handoff:** Do not write `README.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`, or anything under `docs/`; the permissions deny it. When a change needs a decision recorded, a new term, a usage note, or a page explaining design, dispatch the `scribe` subagent with the decision, the reason, the rejected alternatives, and the target paths. Scribe keeps `GLOSSARY.md` and ADRs local-only; never stage them. If the brief is not ready, report what is missing instead of writing a guess.
+10. **Docs Handoff:** Do not write `README.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`, or anything under `docs/`; the permissions deny it. When a change needs a decision recorded, a new term, a usage note, or a page explaining design, dispatch the `scribewright` subagent with the decision, the reason, the rejected alternatives, and the target paths. Scribewright keeps `GLOSSARY.md` and ADRs local-only; never stage them. If the brief is not ready, report what is missing instead of writing a guess.
 
 ## Thinking vs Output Protocol
 

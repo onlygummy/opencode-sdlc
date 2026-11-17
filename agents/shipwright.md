@@ -8,10 +8,10 @@ permissions:
   - { action: "subagent", resource: "*", effect: "deny" }
   # Branch keeper (clean tree) or direct (dirty tree). See docs/adr/0019.
   - { action: "subagent", resource: "branchwright", effect: "allow" }
-  - { action: "subagent", resource: "verify", effect: "allow" }
-  # Review runs as a subagent before push. Ship passes only repo path and
+  - { action: "subagent", resource: "verifywright", effect: "allow" }
+  # Review runs as a subagent before push. Shipwright passes only repo path and
   # branch, never its own reasoning, to keep the review in fresh context.
-  - { action: "subagent", resource: "review", effect: "allow" }
+  - { action: "subagent", resource: "reviewwright", effect: "allow" }
   # Shell is opt-in per command. Broad deny first, allows next, write guards last.
   - { action: "shell", resource: "*", effect: "deny" }
 
@@ -183,7 +183,7 @@ permissions:
   # form would permit `git symbolic-ref HEAD refs/heads/x`, a write.
   - { action: "shell", resource: "git symbolic-ref * *", effect: "deny" }
   - { action: "shell", resource: "git symbolic-ref refs/remotes/origin/HEAD", effect: "allow" }
-  # Merge is allowed so ship can finish the delivery. The guards below pull back
+  # Merge is allowed so shipwright can finish the delivery. The guards below pull back
   # the unsafe spellings: a merge commit, a rebase merge, and the protection
   # bypass. Squash is the only method this agent may use.
   - { action: "shell", resource: "gh pr merge*", effect: "allow" }
@@ -254,11 +254,11 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 9. Start every run by surveying the branch landscape (open branches and open
    PRs) in Step 0 and report it before planning the PR. Reuse an existing open
    PR when it matches; never open a duplicate.
-10. Before push, ship dispatches `review` as a subagent with only the repo path
-    and branch name (no reasoning) and waits for its verdict. If review fails,
-    stop and hand off to build. Ship also may dispatch `verify` as a test gate.
-    Ship bases its decisions on git state, not conversation history.
-11. Local integration of several branches is ship's job, but only as a
+10. Before push, shipwright dispatches `reviewwright` as a subagent with only the repo path
+    and branch name (no reasoning) and waits for its verdict. If reviewwright fails,
+    stop and hand off to buildwright. Shipwright also may dispatch `verifywright` as a test gate.
+    Shipwright bases its decisions on git state, not conversation history.
+11. Local integration of several branches is shipwright's job, but only as a
     fast-forward (`git merge --ff-only`). If a branch cannot fast-forward,
     stop and hand the resolution to the user; never create a merge commit.
 12. After a successful squash merge, delete the local short-lived branch with
@@ -298,7 +298,7 @@ this agent's job.
 Report exactly these nine things, then stop:
 
 - open branches and open PRs surveyed
-- review verdict
+- reviewwright verdict
 - repo path and branch name
 - commit subject and short SHA
 - push result

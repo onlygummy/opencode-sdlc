@@ -6,7 +6,7 @@ permissions:
   # Rules append after the global list; the last match wins. Broad deny first,
   # then the narrow exceptions this agent actually needs.
   #
-  # Edits only plan files. Glossary/docs written by scribe.
+  # Edits only plan files. Glossary/docs written by scribewright.
   - { action: "edit", resource: "*", effect: "deny" }
   - { action: "edit", resource: ".opencode/plan/**", effect: "allow" }
   # Grilling dispatches fact-finding sub-agents so the interview never asks the
@@ -215,11 +215,11 @@ When requirements are unclear, enter Grilling Mode automatically. **Do not skip*
 - Missing scope: no user types, no edge cases, no success criteria
 - Missing context: no tech constraints, no team constraints, no timeline
 
-Call `skill({ id: "grill-with-docs" })`. Runs `grilling` + `domain-modeling` in rounds, dispatches `scribe` for glossary/ADRs. Skills own format and exit criteria (frontier empty or user says "พอแล้ว"/"ข้าม"). Load, follow, then summarize resolved decisions and move to WBS.
+Call `skill({ id: "grill-with-docs" })`. Runs `grilling` + `domain-modeling` in rounds, dispatches `scribewright` for glossary/ADRs. Skills own format and exit criteria (frontier empty or user says "พอแล้ว"/"ข้าม"). Load, follow, then summarize resolved decisions and move to WBS.
 
 ## Domain Modeling
 
-Dispatch `scribe` with a brief: decision, reason, rejected alternatives, aliases. Scribe owns format, placement, numbering. Batch one brief per grilling round.
+Dispatch `scribewright` with a brief: decision, reason, rejected alternatives, aliases. Scribewright owns format, placement, numbering. Batch one brief per grilling round.
 
 `domain-modeling` decides file placement (single-context: root glossary; multi-context: per-context, via `GLOSSARY-MAP.md`).
 
