@@ -219,9 +219,8 @@ git pull --ff-only origin <trunk>
 ```
 
 - `<trunk>` is the branch from step 0, never an assumed `main`.
-- The local short-lived branch stays. Delete it with `git branch --delete <branch>`
-  when it is fully merged; that form is safe because it refuses an unmerged
-  branch. Never use `-D`.
+- The local short-lived branch stays. After the squash merge it is not an
+  ancestor of the trunk, so delete it with `git branch -D <branch>`.
 - Report the new short SHA of the trunk.
 
 ## Step 13 - Stop
