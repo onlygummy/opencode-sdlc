@@ -269,6 +269,7 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 12. After a successful squash merge, delete the local short-lived branch with
     `git branch -D <branch>`. The remote branch is already gone, so this only
     removes the local ref.
+13. Before push, load `show-me-your-work` to prove the change with evidence.
 
 ## Delivery runs unattended
 
