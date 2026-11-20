@@ -71,6 +71,9 @@ permissions:
   - { action: "shell", resource: "gh auth status*", effect: "allow" }
   - { action: "shell", resource: "gh repo view*", effect: "allow" }
   - { action: "shell", resource: "gh pr create*", effect: "allow" }
+  - { action: "shell", resource: "gh pr edit*", effect: "allow" }
+  - { action: "shell", resource: "gh pr reopen*", effect: "allow" }
+  - { action: "shell", resource: "gh pr close*", effect: "allow" }
   - { action: "shell", resource: "gh pr view*", effect: "allow" }
   - { action: "shell", resource: "gh pr list*", effect: "allow" }
   - { action: "shell", resource: "gh pr checks*", effect: "allow" }
@@ -188,7 +191,7 @@ permissions:
   # the unsafe spellings: a merge commit, a rebase merge, and the protection
   # bypass. Squash is the only method this agent may use.
   - { action: "shell", resource: "gh pr merge*", effect: "allow" }
-  - { action: "shell", resource: "gh pr close*", effect: "deny" }
+  # `gh pr close` is now allowed above for PR management.
   - { action: "shell", resource: "gh pr review*", effect: "deny" }
   - { action: "shell", resource: "gh release*", effect: "deny" }
   - { action: "shell", resource: "gh api *", effect: "deny" }
