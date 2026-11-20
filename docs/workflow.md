@@ -1,17 +1,17 @@
 # Workflow
 
-Seven agents share the work. Each one has a narrow scope and a stopping point.
+Eight agents share the work. Each one has a narrow scope and a stopping point.
 The permission rules enforce the scope; the prompt describes the job.
 
 ## planwright
 
 The default agent. It turns a request into requirements, a design, and a work
-breakdown. It can edit plan files under `.opencode/plan/` and nothing else. It
+breakdown. It can edit artifacts under `.opencode/artifact/` and nothing else. It
 dispatches `scribewright` to write ADRs, glossary entries, and docs pages. It
 cannot edit code, commit, or push.
 
-ADRs and glossary entries are local-only development docs. They stay on disk and
-are not in git.
+Artifacts, ADRs, and glossary entries are local-only development docs. They stay
+on disk and are not in git.
 
 ## buildwright
 
@@ -98,6 +98,24 @@ commits, pushes, or changes branch state.
 | Branch deletion | `shipwright`, after the merge | shipwright deletes the remote branch via `--delete-branch` and the local short-lived branch via `git branch -D` after the merge. |
 | Release | user | `release-please` reads conventional commits and opens the release PR; no one creates tags by hand |
 | CI runs | `runwright` | Monitors GitHub Actions runs after merge and reports check results |
+
+## Definition of Done
+
+A change is done when every item holds. A missing item is reported, not skipped.
+
+- The plan under `.opencode/artifact/` names the acceptance criteria, and the diff
+  satisfies them.
+- The branch carries one logical change and no unrelated files.
+- Lint and typecheck pass on the branch.
+- Tests pass, or the report says `not run` with the reason.
+- `reviewwright` returns `passed: true`, and the commit message matches the diff.
+- The PR body carries the evidence: commands, output, diff, and what was not done.
+- `README.md` or `docs/` is updated when usage or a decision changed.
+- The changelog comes from the conventional commit on the trunk; no hand-edited
+  version and no hand-made tag.
+- Local-only files (`GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/`,
+  `.opencode/artifact/`) are not staged.
+
 ## Only scribewright writes documents
 
 `planwright` and `buildwright` both dispatch `scribewright`, so there is one

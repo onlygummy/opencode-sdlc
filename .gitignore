@@ -9,3 +9,4 @@ service.json
 GLOSSARY.md
 GLOSSARY-MAP.md
 docs/adr/
+.opencode/artifact/

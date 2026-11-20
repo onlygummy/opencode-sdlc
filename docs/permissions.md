@@ -33,14 +33,14 @@ Per-agent git rules live in `agents/<agent>.md`, not in the global list. The
 reason is ordering: an agent that denies shell has to re-grant each read-only
 command after its own deny. See [ADR 0005](adr/0005-per-agent-git-rules.md).
 
-ADR files and the glossary are local-only development docs. They stay on disk
-and are not in git.
+ADR files, the glossary, and the artifacts under `.opencode/artifact/` are
+local-only development docs. They stay on disk and are not in git.
 
 ## Agent scope
 
 | Agent | Edit scope | Shell scope |
 | --- | --- | --- |
-| `planwright` | Files under `.opencode/plan/` | Read-only git, read-only file and exploration commands, and project run commands (lint and typecheck run without a prompt; test and verify ask first) |
+| `planwright` | Files under `.opencode/artifact/` | Read-only git, read-only file and exploration commands, and project run commands (lint and typecheck run without a prompt; test and verify ask first) |
 | `buildwright` | Code and config; docs files are denied | Full allow, but `git *` is denied except read forms, `git add`, `git rm`, `git mv`, `git stash`, `git commit`, and `git switch*`; `--amend` is allowed only on an unpushed commit, `--no-verify` and `-n` are denied, push stays denied, and the destructive switch forms are denied; test runners ask |
 | `branchwright` | Nothing | Read-only state checks plus `cd *` and `git switch -c*`; destructive switch forms and branch deletion are denied |
 | `verifywright` | Nothing | Read-only git, lint and typecheck commands, and test runners that ask |

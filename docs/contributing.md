@@ -26,8 +26,9 @@ on demand, when the skill description matches the work at hand.
 
 Dispatch `scribewright`. It is the only writer of `README.md`, `GLOSSARY.md`,
 `GLOSSARY-MAP.md`, and files under `docs/`. `planwright` and `buildwright` both
-reach it. `GLOSSARY.md`, `GLOSSARY-MAP.md`, and `docs/adr/` are local-only
-development docs. They stay on disk and are not in git.
+reach it. `GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/`, and
+`.opencode/artifact/` are local-only development docs. They stay on disk and are
+not in git.
 
 Scribewright loads the `docs-writing` skill for README and docs pages. It fixes
 the page types, the page shape, the length limits, and the compaction rules.
@@ -48,10 +49,13 @@ padded to four digits. Glossary entries follow the shape already in
    lint.
 3. `buildwright` commits the change. `reviewwright` verifies the commits and
    cross-checks the commit message.
-4. `shipwright` pushes and opens the PR.
+4. `shipwright` pushes, opens the PR, waits for checks, squash-merges, deletes
+   the merged branch, and syncs the trunk.
 
-The user merges on the web. `shipwright` then verifies the merge, deletes the
-remote branch after approval, and pulls the trunk.
+The wait script gates the merge. When it returns ready, `shipwright` squash-merges
+the PR; when a check fails, it stops and names the check. `shipwright` never uses
+`--admin`, so a branch protection rule that blocks the merge stops the run instead
+of being bypassed.
 
 ## Commits
 

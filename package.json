@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "OpenCode SDLC configuration",
+  "scripts": {
+    "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate-config.ps1"
+  },
   "dependencies": {
     "@opencode/ai": "latest",
     "@opencode/plugin": "latest"

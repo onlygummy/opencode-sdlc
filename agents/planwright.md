@@ -6,9 +6,9 @@ permissions:
   # Rules append after the global list; the last match wins. Broad deny first,
   # then the narrow exceptions this agent actually needs.
   #
-  # Edits only plan files. Glossary/docs written by scribewright.
+  # Edits only artifact files. Glossary/docs written by scribewright.
   - { action: "edit", resource: "*", effect: "deny" }
-  - { action: "edit", resource: ".opencode/plan/**", effect: "allow" }
+  - { action: "edit", resource: ".opencode/artifact/**", effect: "allow" }
   # Grilling dispatches fact-finding sub-agents so the interview never asks the
   # user for something the filesystem can answer.
   - { action: "subagent", resource: "*", effect: "allow" }
@@ -227,7 +227,7 @@ Dispatch `scribewright` with a brief: decision, reason, rejected alternatives, a
 
 `domain-modeling` decides file placement (single-context: root glossary; multi-context: per-context, via `GLOSSARY-MAP.md`).
 
-`GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/` are local-only, never committed. If `.gitignore` lacks them, tell caller to add entries.
+`GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/`, and `.opencode/artifact/` are local-only, never committed. If `.gitignore` lacks them, tell caller to add entries.
 
 ## Thinking vs Output Protocol
 

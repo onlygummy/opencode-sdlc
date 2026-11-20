@@ -26,7 +26,7 @@
   // Principle: minimum privilege per agent (YAGNI + SOC).
   "permissions": [
     // File editing — denied globally. Buildwright overrides to allow; Planwright
-    // gets a narrow allowlist limited to plan files and domain docs.
+    // gets a narrow allowlist limited to artifact files and domain docs.
     { "action": "edit", "resource": "*", "effect": "deny" },
     { "action": "read", "resource": "*", "effect": "allow" },
     { "action": "glob", "resource": "*", "effect": "allow" },

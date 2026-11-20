@@ -1,7 +1,7 @@
 # opencode-sdlc
 
 This repo is a personal OpenCode configuration, installed at `~/.config/opencode`
-(`%USERPROFILE%\.config\opencode` on Windows). It defines seven agents, a global
+(`%USERPROFILE%\.config\opencode` on Windows). It defines eight agents, a global
 permission baseline, and the skills those agents load.
 
 ## Principles
@@ -40,7 +40,7 @@ Setup, verification, worker behavior, and troubleshooting are in [docs/proxy.md]
 
 | Agent | Use it for | Can edit |
 | --- | --- | --- |
-| planwright | Requirements, design, and work breakdown; the default agent | Plan files under `.opencode/plan/` |
+| planwright | Requirements, design, and work breakdown; the default agent | Artifacts under `.opencode/artifact/` |
 | buildwright | Writing and refactoring code and config; it also commits on its short-lived branch | Code and config, but not `README.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`, or `docs/` |
 | shipwright | Pushing, the pull request, the wait for checks, the squash merge, and the trunk sync; it commits only when the tree arrives uncommitted | Nothing; it writes git and `gh` state only |
 
@@ -74,5 +74,7 @@ Setup, verification, worker behavior, and troubleshooting are in [docs/proxy.md]
 - [docs/permissions.md](docs/permissions.md): how the permission rules work
 - [docs/proxy.md](docs/proxy.md): OpenCode Go proxy setup and troubleshooting
 - [docs/contributing.md](docs/contributing.md): adding agents, skills, and docs
+- [docs/metrics.md](docs/metrics.md): the delivery metrics baseline and how to record it
 
-`GLOSSARY.md` and `docs/adr/` are local-only development docs, kept on disk, not in git.
+`GLOSSARY.md`, `GLOSSARY-MAP.md`, `docs/adr/`, and `.opencode/artifact/` are
+local-only development docs, kept on disk, not in git.
