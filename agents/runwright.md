@@ -11,6 +11,8 @@ permissions:
   - { action: "shell", resource: "gh pr checks*", effect: "allow" }
   - { action: "shell", resource: "git log*", effect: "allow" }
   - { action: "shell", resource: "git status*", effect: "allow" }
+  # `--output=<file>` turns a read command into a file write.
+  - { action: "shell", resource: "git * --output*", effect: "deny" }
 ---
 
 ## Role
@@ -22,7 +24,7 @@ Run monitor. Report GitHub Actions run status and failing steps. Never edits, ne
 Load the `github-actions` skill for job naming and workflow best practices before reporting.
 
 1. Run `gh run list` for the repo to find the latest run.
-2. If a run failed, run `gh run view <id>` and report the failing job and step.
+2. If a run failed, run `gh run view <id> --log-failed` and report the failing job and step.
 3. Report verdict: `pass`, `fail`, or `not run` with reason.
 
 ## Output

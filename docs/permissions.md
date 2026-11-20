@@ -47,7 +47,7 @@ and are not in git.
 | `reviewwright` | Nothing | Read-only git, test runners, and lint; no `add`, `commit`, or `push` |
 | `shipwright` | Nothing | Git write path and `gh pr` read, create, and squash merge; may dispatch `branchwright` when the tree is clean; push is allowed; `gh pr merge` is allowed but only with squash, and `--merge`, `--rebase`, and `--admin` are denied; trunk push, force push, prune, and tag push stay denied; the merged remote branch is deleted by `--delete-branch`; local `git branch --delete` is allowed, and local `git branch -D` is allowed after a squash merge to clean up the short-lived branch |
 | `scribewright` | The docs tree and `README.md` | Nothing |
-
+| `runwright` | Nothing | Read-only `gh run`/`gh pr checks` and git log/status |
 `shipwright` pushes without a prompt, but it denies `git push --prune` and
 `git push --follow-tags`. `--prune` deletes remote refs without the delete ask.
 `--follow-tags` pushes tags, and `--tags` is already denied. `shipwright` also

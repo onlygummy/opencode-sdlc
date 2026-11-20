@@ -52,6 +52,7 @@ Setup, verification, worker behavior, and troubleshooting are in [docs/proxy.md]
 | reviewwright | Pre-push verification and a commit message cross-check | Nothing |
 | verifywright | Runs lint, typecheck, and the test suite on demand and reports the evidence | Nothing |
 | scribewright | ADRs, glossary entries, README, and pages under `docs/` | `README.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`, and `docs/` |
+| runwright | Monitors GitHub Actions runs after push/merge and reports check results | Nothing |
 
 ## Flow
 
