@@ -211,6 +211,9 @@ before the next. Quote paths that contain spaces.
    same three conditions and name the one that stopped you. Never use
    `git switch -C`, never force, and never switch away from the branch you created.
    Keep this guard list in step with the branch subagent; when one changes, change both.
+   When a change spans several branches, cut one integration branch from an
+   up-to-date trunk and merge the others into it instead of delivering each one
+   separately; fewer branches mean fewer conflicts.
 
 4. **Plan & Apply:** Mentally map out how to implement the solution strictly using the 6 rules. Strip away any unnecessary requirements (YAGNI) and simplify the logic (KISS).
 

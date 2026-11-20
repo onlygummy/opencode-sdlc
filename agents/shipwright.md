@@ -278,6 +278,8 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
 13. Before push, load `show-me-your-work` to prove the change with evidence.
 14. After merge, dispatch `runwright` to monitor GitHub Actions runs. Load the
     `github-actions` skill for job naming and workflow best practices.
+15. Before push, fetch and fast-forward the trunk. If the branch is behind the
+    trunk, stop and report the gap instead of pushing a stale branch.
 
 ## Delivery runs unattended
 

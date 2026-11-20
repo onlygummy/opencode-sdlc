@@ -57,9 +57,12 @@ more than one commit. Stop and report the split.
 
 ```powershell
 git fetch origin
+git pull --ff-only origin <trunk>
 git branch --show-current
 ```
 
+- Sync the trunk before cutting a new branch. A stale trunk is the usual cause
+  of a later merge conflict.
 - If `branchwright` already created the branch for this work, the check returns
   it. Stay on it and say so instead of stacking another branch.
 - Otherwise the work was never branched. When the tree is clean, dispatch
