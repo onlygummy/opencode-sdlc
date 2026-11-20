@@ -83,6 +83,12 @@ pushes, or changes branch state.
 Lint and typecheck run without a prompt; test runners ask first because they can
 be slow or costly. The verdict is `pass`, `fail`, or `not run` with the reason.
 
+## runwright
+
+A subagent, launched by `shipwright` after merge. It monitors GitHub Actions
+runs and reports check results. It is read-only: it never edits, stages,
+commits, pushes, or changes branch state.
+
 ## Gates
 
 | Gate | Owner | Why |
@@ -91,7 +97,7 @@ be slow or costly. The verdict is `pass`, `fail`, or `not run` with the reason.
 | Merge | `shipwright` | Squash merge runs only after the wait script returns ready; a protection rule that blocks it stops the run, and `--admin` is never used |
 | Branch deletion | `shipwright`, after the merge | shipwright deletes the remote branch via `--delete-branch` and the local short-lived branch via `git branch -D` after the merge. |
 | Release | user | `release-please` reads conventional commits and opens the release PR; no one creates tags by hand |
-
+| CI runs | `runwright` | Monitors GitHub Actions runs after merge and reports check results |
 ## Only scribewright writes documents
 
 `planwright` and `buildwright` both dispatch `scribewright`, so there is one

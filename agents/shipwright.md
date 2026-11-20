@@ -12,6 +12,7 @@ permissions:
   # Review runs as a subagent before push. Shipwright passes only repo path and
   # branch, never its own reasoning, to keep the review in fresh context.
   - { action: "subagent", resource: "reviewwright", effect: "allow" }
+  - { action: "subagent", resource: "runwright", effect: "allow" }
   # Shell is opt-in per command. Broad deny first, allows next, write guards last.
   - { action: "shell", resource: "*", effect: "deny" }
 
@@ -78,6 +79,8 @@ permissions:
   - { action: "shell", resource: "gh pr list*", effect: "allow" }
   - { action: "shell", resource: "gh pr checks*", effect: "allow" }
   - { action: "shell", resource: "gh pr diff*", effect: "allow" }
+  - { action: "shell", resource: "gh run list*", effect: "allow" }
+  - { action: "shell", resource: "gh run view*", effect: "allow" }
   # The wait script is the merge gate. Allow it by file name only, so no other
   # PowerShell command becomes reachable. The path lives in the OpenCode config
   # tree, not the project, because that is where the skill ships its scripts.
@@ -273,6 +276,8 @@ Load the `git-delivery` skill and follow its order. Do nothing else before it.
     `git branch -D <branch>`. The remote branch is already gone, so this only
     removes the local ref.
 13. Before push, load `show-me-your-work` to prove the change with evidence.
+14. After merge, dispatch `runwright` to monitor GitHub Actions runs. Load the
+    `github-actions` skill for job naming and workflow best practices.
 
 ## Delivery runs unattended
 
