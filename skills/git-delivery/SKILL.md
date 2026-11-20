@@ -58,10 +58,14 @@ more than one commit. Stop and report the split.
 ```powershell
 git fetch origin
 git branch --show-current
+git status --short
 ```
 
 - If `branchwright` already created the branch for this work, the check returns
   it. Stay on it and say so instead of stacking another branch.
+- Only when the current branch is the trunk and the tree is clean, sync it with
+  `git pull --ff-only origin <trunk>`. A stale trunk is the usual cause of a
+  later merge conflict. Never pull while on a feature branch or a dirty tree.
 - Otherwise the work was never branched. When the tree is clean, dispatch
   `branchwright`. When the reviewed change is still in the tree, its dirty-trunk
   guard would refuse, so cut the branch once yourself: `git switch -c <type>/<slug>`.
@@ -145,7 +149,9 @@ commit.
 ## Step 8 - Push
 
 Review must have passed before this step. Shipwright dispatches `reviewwright`
-as a subagent before pushing. Print the commit stat and the full message first, then:
+as a subagent before pushing. Check that the branch is not behind the fetched
+trunk; if it is, stop and report. Print the commit stat and the full message
+first, then:
 
 ```powershell
 git push -u origin <branch>
